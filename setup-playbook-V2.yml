@@ -1,0 +1,22 @@
+# Introducing the variables concept for playbooks
+- name: Basic System Setup 
+  hosts: web 
+  become: true
+  vars:
+    - user_name: Karthik # Custom Variable 1
+    - package_state: latest # Custom Variable 2
+    - security_only: true # Custom Variable 3
+
+  tasks: 
+
+    - name: Update all security-related packages
+      ansible.builtin.package:
+        name: '*'
+        state: "{{ package_state }}" # Using variables from the vars section  
+        security: "{{ security_only }}" # Using variables from the vars section
+
+    - name: Create a new user 
+      ansible.builtin.user: 
+        name: "{{ user_name }}"
+        state: present
+        create_home: true 

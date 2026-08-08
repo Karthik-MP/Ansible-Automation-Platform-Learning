@@ -1,0 +1,17 @@
+# Introducing the variables concept for playbooks
+- name: Basic System Setup 
+  hosts: web 
+  become: true
+  tasks: 
+
+    - name: Update all security-related packages
+      ansible.builtin.package:
+        name: '*'
+        state: "{{ package_state }}" # The variables can defined in the job template also it read variables from job template in case of AAP
+        security: "{{ security_only }}" # The variables can defined in the job template also it read variables from job template in case of AAP
+
+    - name: Create a new user 
+      ansible.builtin.user: 
+        name: "{{ user_name }}"
+        state: present
+        create_home: true 

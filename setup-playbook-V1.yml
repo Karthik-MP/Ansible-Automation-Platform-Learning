@@ -1,0 +1,16 @@
+- name: Basic System Setup # Gives a human-readable description to this play
+  hosts: web # Specifies this play runs on the 'web' group servers
+  become: true # Runs tasks with root/administrator privileges (like sudo)
+  tasks: # Begins the list of actions to execute on the servers
+
+    - name: Update all security-related packages # Human-readable title for the first task
+      ansible.builtin.package: # Uses the generic OS package management module
+        name: '*' # Targets all installed packages
+        state: latest # Upgrades the targeted packages to the newest version
+        security: true # Only applies updates marked as security patches
+
+    - name: Create a new user # Human-readable title for the second task
+      ansible.builtin.user: # Uses the module for managing user accounts
+        name: Karthik # Specifies the username for the account
+        state: present # Ensures the user account exists
+        create_home: true # Ensures a home directory is created for the user
