@@ -1,3 +1,8 @@
+# Course Material:
+Course Name: Ansible Basics: Automation Technical Overview (DO007) - By Red Hat
+Course link: https://rhtapps.redhat.com/promo/course/do007
+Course Content link: https://github.com/rht-labs/do007
+
 An **Ansible Playbook** is essentially an instruction manual for your automation.
 
 In technical terms, it is a blueprint of automation tasks—which are complex IT actions executed with limited or no human involvement.
@@ -156,4 +161,33 @@ handlers:
     ansible.builtin.service:
       name: nginx
       state: restarted
+```
+
+**Templates:** 
+
+* Templates are files that dynamically generate content by using variables, conditionals, and loops and filters.
+* Templates are files that can have variables injected into them before being placed on a server. They are used to create dynamic configuration files. 
+
+For example, you can create a template for a configuration file that has variables for the database host, username, and password. Then, you can use Ansible to fill in the values of the variables and create the configuration file on the server.
+
+How do they work:
+
+* First by reading in the source template file (eg. .j2 file)
+* Then by injecting the values of the variables into the template
+* Finally deploying the processed file with variables values in place on the remote server. 
+
+Eg:
+```yaml
+ - name: Ensure apache is installed and started
+  hosts: web
+  vars:
+    http_port: 80
+    http_docroot: /var/www/mysite.com
+
+  tasks:
+    - name: verify correct configuration file is present
+      ansible.template.template:
+        src: templates/httpd.conf.j2
+        dest: /etc/httpd/conf/httpd.conf
+        
 ```

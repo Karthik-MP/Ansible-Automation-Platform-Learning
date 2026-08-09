@@ -1,0 +1,61 @@
+# Introducing the variables concept for playbooks
+- name: Basic System Setup 
+  hosts: all # this will run the playbook on all the groups define in the ansible inventory file 
+  become: true
+  tasks: 
+
+    - name: Update all security-related packages
+      ansible.builtin.package:
+        name: '*'
+        state: "{{ package_state }}" # The variables can defined in the job template also it read variables from job template in case of AAP
+        security: "{{ security_only }}" # The variables can defined in the job template also it read variables from job template in case of AAP
+
+    - name: Create a new user 
+      ansible.builtin.user: 
+        name: "{{ item }}" # Using the item variable to create multiple users
+        state: present
+        create_home: true 
+      loop:
+        - Karthik
+        - John
+        - Jane
+
+    - name: Install Apache on web servers
+      ansible.builtin.package:
+        name: "{{ package_name }}"
+        state: present 
+      when: inventory_hostname in groups['web'] # controlling which host the package will be installed on
+      
+    - name: Install firewalld on web servers
+      ansible.builtin.package:
+        name: firewalld
+        state: present 
+      when: inventory_hostname in groups['web']
+      
+    - name: Ensure firewalld is started and running
+      ansible.builtin.service:
+        name: firewalld
+        state: started
+        enabled: true
+      when: inventory_hostname in groups['web']
+
+    - name: Allow http and https traffic on web servers
+      ansible.posix.firewalld:
+        service: http
+        permanent: true
+        state: enabled
+      when: inventory_hostname in groups['web'] 
+      notify: Reload firewalld # Notifying the handler to reload firewalld
+
+    - name: update MOTD from jinja2 template
+      ansible.builtin.template:
+        src: templates/motd.j2
+        dest: /etc/motd
+
+  handlers: # Handlers are tasks that are only executed when notified by another task
+    - name: Reload firewalld # Name should be same as the notify name in the task 
+      ansible.builtin.service: #
+        name: firewalld # Services name
+        state: reloaded # State of the service to be reloaded 
+        
+        
