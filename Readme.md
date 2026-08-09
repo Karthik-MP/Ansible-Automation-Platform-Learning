@@ -163,7 +163,7 @@ handlers:
       state: restarted
 ```
 
-**Templates:** 
+## Templates: 
 
 * Templates are files that dynamically generate content by using variables, conditionals, and loops and filters.
 * Templates are files that can have variables injected into them before being placed on a server. They are used to create dynamic configuration files. 
@@ -176,7 +176,7 @@ How do they work:
 * Then by injecting the values of the variables into the template
 * Finally deploying the processed file with variables values in place on the remote server. 
 
-Eg:
+Eg: 
 ```yaml
  - name: Ensure apache is installed and started
   hosts: web
@@ -191,3 +191,145 @@ Eg:
         dest: /etc/httpd/conf/httpd.conf
         
 ```
+Live Example: [`templates/motd.j2`](templates/motd.j2) and  [`setup-playbook-V5.yml`](setup-playbook-V5.yml)
+
+
+## Ansible Roles: 
+
+* A method to modularize the different components of the your automation. Think of them as pre-packaged instruction  that group tasks, variables, and handlers together into reusable components.
+* Roles are the most efficient way to organize and reuse Ansible automation.
+* They allow you to break down complex automation into smaller, more manageable pieces.
+
+Here how they break down the components:
+
+* Task: the core of your automation, defined step-by-step in tasks/main.yml
+* Variables: Configrations you can adjust, store in vars/ or defaults.
+* Files: static files/resouces like scripts or config files you need to deploy, stored in the files/ directory.
+* Templates: Dynamic files that can be customized using variables, located in the templates/ directory.
+* Handlers: Actions that run only when notified, defined in handlers/main.yml. 
+
+This Structures approach makes it easier to organize, reuse, and maintain your playbooks and share your automation with others.
+
+With these Ansible Roles we can acheive
+* Reusability: write once and use in multiple playbooks 
+* Maintainability: components are isolated and self-contained, easier to debug and troubleshoot 
+* Scalability: easier to scale your automation
+* Collaboration: easier to collaborate with others 
+
+```
+my_role/
+├── defaults/
+│   └── main.yml
+├── files/
+│   └── readme.txt
+├── handlers/
+│   └── main.yml
+├── tasks/
+│   └── main.yml
+├── templates/
+│   └── config.j2
+└── vars/
+    └── main.yml
+```
+
+**How to create and run Ansible roles:**
+
+* Generating a Role
+```bash
+ansible-galaxy init my_role 
+```
+
+* **Tree Example:**
+
+```bash
+tree my_role
+```
+
+**Tree Structure:**
+```
+my_role/
+├── defaults/
+│   └── main.yml
+├── files/
+│   └── readme.txt
+├── handlers/
+│   └── main.yml
+├── tasks/
+│   └── main.yml
+├── templates/
+│   └── config.j2
+└── vars/
+    └── main.yml
+```
+
+# Ansible vs Kubernetes
+
+**Initial Intuition:** *"I think there are some similarities between Kubernetes and Ansible. In Ansible, you can configure web servers, update them, and maintain them. Similarly, Kubernetes has the extra power to spin up pods, install required applications, and manage servers."*
+
+Your intuition is partly correct. There is overlap, but Ansible and Kubernetes solve different problems.
+
+The easiest way to think about it:
+
+**Ansible manages machines. Kubernetes manages applications/containers running on machines.**
+
+### A simple comparison
+
+| Feature | Ansible | Kubernetes |
+| :--- | :--- | :--- |
+| **Main job** | Configure and automate infrastructure | Run and manage containerized applications |
+| **Manages** | Servers, packages, files, services, users, configs | Pods, containers, services, deployments |
+| **Typical question** | "How do I configure these 20 servers?" | "How do I keep 10 copies of my app running?" |
+| **Works with** | VMs, physical servers, cloud instances, network devices, etc. | Primarily container workloads |
+| **Scaling** | You write automation to scale | Built-in concepts for scaling |
+| **Self-healing** | You can automate it | Core feature |
+| **Desired state** | Yes, to an extent | Fundamental design principle |
+| **Example** | Install Nginx and configure it | Run 3 replicas of an Nginx container |
+
+### Where the comparison is right
+
+Suppose you have 10 Linux servers.
+
+With **Ansible**, you might say:
+
+For all 10 servers:
+1. Install Docker
+2. Install nginx
+3. Copy nginx.conf
+4. Start nginx
+5. Make sure nginx starts on boot
+
+Ansible connects to those machines and performs those tasks. You can also use Ansible to install Kubernetes itself, configure nodes, deploy applications, etc.
+
+With **Kubernetes**, you generally don't say:
+
+* SSH into server 1
+* Install nginx
+* Start nginx
+
+Instead, you say something like:
+
+```yaml
+replicas: 3
+image: nginx:latest
+```
+
+You're telling Kubernetes:
+
+*"I want 3 instances of this application running."*
+
+Kubernetes then figures out where to run them and continuously works to make reality match that desired state.
+
+If one pod dies:
+
+**You:** I want 3 nginx pods
+
+**Kubernetes:**
+* pod 1 ✓
+* pod 2 ✓
+* pod 3 ✗
+* → create replacement pod
+* pod 1 ✓
+* pod 2 ✓
+* pod 4 ✓
+
+That's one of the big differences.

@@ -1,0 +1,11 @@
+<html>
+<body>
+    <h1> Ansible Automation Platform </h1>
+    <p> This page is served by the {{ ansible_hostname }} </p> 
+    <p> The IP address of this server is {{ ansible_default_ipv4.address }} </p>
+    <p> The Operating System of this server is {{ ansible_distribution }} {{ ansible_distribution_version }} </p>
+    <p> The Architecture of this server is {{ ansible_architecture }} </p>
+    <p> The Memory of this server is {{ ansible_memtotal_mb }} MB </p>
+    <p> The Storage of this server is {{ ansible_mounts }} </p>
+</body>
+</html>

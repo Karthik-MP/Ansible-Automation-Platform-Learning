@@ -1,0 +1,4 @@
+- name: Reload firewalld # Name should be same as the notify name in the task 
+  ansible.builtin.service: #
+    name: firewalld # Services name
+    state: reloaded # State of the service to be reloaded 

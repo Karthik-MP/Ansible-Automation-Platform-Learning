@@ -1,0 +1,4 @@
+apache_package_name: httpd
+apache_service_name: httpd
+firewalld_package_name: firewalld
+firewalld_service_name: firewalld
