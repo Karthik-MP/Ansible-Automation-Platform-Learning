@@ -1,0 +1,7 @@
+- name: Deploy Apache using a role
+  hosts: web
+  become: true
+  collections:
+    - my_namespace.my_collection
+  roles:
+    - my_namespace.my_collection.apache

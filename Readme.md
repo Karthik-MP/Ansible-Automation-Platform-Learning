@@ -333,3 +333,60 @@ If one pod dies:
 * pod 4 ✓
 
 That's one of the big differences.
+
+## Ansible Collections: 
+
+* Ansible Collections are a way to distribute and manage Ansible content (modules, plugins, playbooks and roles) in a modular and organized manner.
+* Groups components like roles, modules, plugins, etc into a single unit 
+* Distribute via Ansible Galaxy or Automation Hub
+  * Ansible Galaxy: is a community platform to discover, share and downloada automation content like roles, modules, etc. 
+    ```bash
+    ansible-galaxy collection list #List all the collections installed on the local system. 
+    ansible-galaxy collection install community.general # Install community.general collection.
+    ansible-galaxy collection install community.mysql # Install community.mysql collection.
+    ```
+  * Ansible Automation Hub: is a private registry to store and share automation content within an organization. hosted source of Red Hat, Validated and Certified Partner Contents collections
+
+* Improves Content management and collaboration within teams  
+
+
+**File Structure:**
+
+```
+<namespace>-<collection>/                 # Collection root
+├── ansible_module.py               # A module
+├── ansible_playbook.yml          # A playbook
+├── ansible_role/                   # A role
+│   ├── defaults/main.yml
+│   ├── handlers/main.yml
+│   ├── tasks/main.yml
+│   ├── templates/config.j2
+│   └── ...
+├── ansible_vars/main.yml             # Collection-wide variables
+├── meta/collection-info.yaml       # Metadata about the collection
+└── README.md                       # Documentation
+```
+
+# Creating ansible collections
+
+```bash
+ansible-galaxy collection init my_namespace.my_collection --init-path ./ansible_collections/ # this will create the collection in the current directory ( ./ansible_collections/ ) 
+```
+What is namespace:
+* When we have same collection names from different vendors we can distinguish them using namespace.
+* In above `my_namespace` is namespace and `my_collection` is collection name. 
+* Namespace is the name of the organization or individual who created the collection.
+
+Tree looks like this 
+```
+./ansible_collections/my_namespace/my_collection/
+├── docs
+├── galaxy.yml
+├── meta
+│   ├── runtime.yml
+├── plugin
+│   ├── README.md
+├── README.md
+├── roles
+
+``` 
