@@ -390,3 +390,13 @@ Tree looks like this
 ├── roles
 
 ``` 
+
+## Requirements file in Ansible Collections:
+
+All the required collections are defined in the `requirements.yml` file.
+
+```yaml
+collections:
+  - name: community.general
+  - name: community.mysql
+```
