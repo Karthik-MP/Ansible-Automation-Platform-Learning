@@ -400,3 +400,23 @@ collections:
   - name: community.general
   - name: community.mysql
 ```
+
+# Role-Based Access Control (RBAC) in Ansible Automation Platform:
+
+* Who can use my automation
+* Logically group contollers objects and grant users and teams read, execute and edit permissions on them.
+* Use predefined roles to grant the required access (execute, read, edit) to the users and teams.
+* Integrates with your existing enterprise authentication systems
+
+In ansible we have 3 levels of RBAC:
+1. An **Organization** is a logical collection of users, teams, inventories, projects, job templates, etc. It is the highest level of RBAC.
+2. A **Team** is a group of users who have access to a specific set of resources. It is a subset of an organization.
+3. A **User** is an individual who has access to a specific set of resources. It is a subset of a team.
+
+# Ansible Workflows
+
+* Workflows enable the creation of powerfull holistic automations, chaining together mulitple pieces of automation and events.
+* Simple logic inside the workflow can trigger automation depending on the success or failure of the previous steps.
+* Add approvals to your workflow to enhance governance.
+* Integrate other sustems, such as ITSM to fit with your existing controls and processes.
+
